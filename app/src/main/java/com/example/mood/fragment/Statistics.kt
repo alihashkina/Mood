@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mood.R
 import com.example.mood.adapters.CardAdapter
@@ -22,7 +23,7 @@ class Statistics : Fragment() {
         val adapter = CardAdapter()
     }
 
-    lateinit var viewModelSt: StatisticsViewModel
+    val viewModel: StatisticsViewModel by viewModels()
     lateinit var bindingStatistics: StatisticsFragmentBinding
 
     override fun onCreateView(
@@ -35,7 +36,6 @@ class Statistics : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModelSt = ViewModelProvider(this).get(StatisticsViewModel::class.java)
 
         //заполнение статистики
         bindingStatistics.apply {

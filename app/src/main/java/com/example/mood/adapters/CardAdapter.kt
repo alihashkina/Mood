@@ -48,7 +48,6 @@ class CardAdapter: RecyclerView.Adapter<CardAdapter.CardHolder>() {
         var idDB = 0
     }
 
-    lateinit var context: Context
     val cardList = ArrayList<Card>()
 
     class CardHolder(item: View): RecyclerView.ViewHolder(item){
@@ -58,41 +57,53 @@ class CardAdapter: RecyclerView.Adapter<CardAdapter.CardHolder>() {
         @SuppressLint("NotifyDataSetChanged")
         fun bind(card: Card, index: Int) = with(binding){
             cardDate.text = card.cardDate
-            cardHealthy.text = card.cardHealthy
-            cardUnhealthy.text = card.cardUnhealthy
-            cardSymptoms.text = card.cardSymptoms
-            cardCare.text = card.cardCare
-            cardOther.text = card.cardOther
+            cardHealthy.text = card.cardHealthy?.replace("[", "")?.replace("]", "")
+            cardUnhealthy.text = card.cardUnhealthy?.replace("[", "")?.replace("]", "")
+            cardSymptoms.text = card.cardSymptoms?.replace("[", "")?.replace("]", "")
+            cardCare.text = card.cardCare?.replace("[", "")?.replace("]", "")
+            cardOther.text = card.cardOther?.replace("[", "")?.replace("]", "")
             id = card.id
 
             when(card.cardMood){
-                0.0F -> cardMood.text = "$mood: $verySad"
-                1.0F -> cardMood.text = "$mood: $sad"
-                2.0F -> cardMood.text = "$mood: $lowSpirit"
-                3.0F -> cardMood.text = "$mood: $neutral"
-                4.0F -> cardMood.text = "$mood: $glad"
-                5.0F -> cardMood.text = "$mood: $happy2"
-                6.0F -> cardMood.text = "$mood: $veryHappy"
+                -5.0F -> cardMood.text = "$mood: $verySad"
+                -4.0F -> cardMood.text = "$mood: $verySad"
+                -3.0F -> cardMood.text = "$mood: $sad"
+                -2.0F -> cardMood.text = "$mood: $sad"
+                -1.0F -> cardMood.text = "$mood: $lowSpirit"
+                0.0F -> cardMood.text = "$mood: $neutral"
+                1.0F -> cardMood.text = "$mood: $glad"
+                2.0F -> cardMood.text = "$mood: $happy2"
+                3.0F -> cardMood.text = "$mood: $happy2"
+                4.0F -> cardMood.text = "$mood: $veryHappy"
+                5.0F -> cardMood.text = "$mood: $veryHappy"
             }
 
             when(card.cardHealth){
-                0.0F -> cardHealth.text = "$health: $feelingAwful"
-                1.0F -> cardHealth.text = "$health: $feelingBad"
-                2.0F -> cardHealth.text = "$health: $feelingNotWell"
-                3.0F -> cardHealth.text = "$health: $feelingNeutral"
-                4.0F -> cardHealth.text = "$health: $feelingWell"
-                5.0F -> cardHealth.text = "$health: $feelingGood"
-                6.0F -> cardHealth.text = "$health: $feelingAwesome"
+                -5.0F -> cardHealth.text = "$health: $feelingAwful"
+                -4.0F -> cardHealth.text = "$health: $feelingAwful"
+                -3.0F -> cardHealth.text = "$health: $feelingBad"
+                -2.0F -> cardHealth.text = "$health: $feelingBad"
+                -1.0F -> cardHealth.text = "$health: $feelingNotWell"
+                0.0F -> cardHealth.text = "$health: $feelingNeutral"
+                1.0F -> cardHealth.text = "$health: $feelingWell"
+                2.0F -> cardHealth.text = "$health: $feelingGood"
+                3.0F -> cardHealth.text = "$health: $feelingGood"
+                4.0F -> cardHealth.text = "$health: $feelingAwesome"
+                5.0F -> cardHealth.text = "$health: $feelingAwesome"
             }
 
             when(card.cardStress){
-                0.0F -> cardStress.text = "$stress2: $strongAnxiety"
-                1.0F -> cardStress.text = "$stress2: $anxiety"
-                2.0F -> cardStress.text = "$stress2: $worry"
-                3.0F -> cardStress.text = "$stress2: $neutral2"
-                4.0F -> cardStress.text = "$stress2: $unconcerned"
-                5.0F -> cardStress.text = "$stress2: $calm"
-                6.0F -> cardStress.text = "$stress2: $harmony"
+                -5.0F -> cardStress.text = "$stress2: $strongAnxiety"
+                -4.0F -> cardStress.text = "$stress2: $strongAnxiety"
+                -3.0F -> cardStress.text = "$stress2: $anxiety"
+                -2.0F -> cardStress.text = "$stress2: $anxiety"
+                -1.0F -> cardStress.text = "$stress2: $worry"
+                0.0F -> cardStress.text = "$stress2: $neutral2"
+                1.0F -> cardStress.text = "$stress2: $unconcerned"
+                2.0F -> cardStress.text = "$stress2: $calm"
+                3.0F -> cardStress.text = "$stress2: $calm"
+                4.0F -> cardStress.text = "$stress2: $harmony"
+                5.0F -> cardStress.text = "$stress2: $harmony"
             }
 
             //кнопка поделиться/удалить
