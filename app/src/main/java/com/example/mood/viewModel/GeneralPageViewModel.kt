@@ -123,6 +123,8 @@ class GeneralPageViewModel : ViewModel() {
     fun deleteAllDB(context: Context){
         Toast.makeText(context, context.getString(R.string.toastDelete), Toast.LENGTH_SHORT).show()
         helper.writableDatabase.delete("USERS", null, null)
+        bindingGeneralPage.scrollGraph.visibility = View.GONE
+        bindingGeneralPage.txtOnbord.visibility = View.VISIBLE
         counterSts.value?.let {
             counterSts.value = true
         }

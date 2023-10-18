@@ -4,9 +4,7 @@ import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
-import android.content.res.ColorStateList
 import android.graphics.Color
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -25,20 +23,15 @@ import com.example.mood.databinding.GeneralPageFragmentBinding
 import com.example.mood.viewModel.GeneralPageViewModel
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import im.dacer.androidcharts.LineView
 import java.text.SimpleDateFormat
 import androidx.lifecycle.Observer
-import com.example.mood.MainActivity
 import com.example.mood.adapters.CardAdapter
 import com.example.mood.viewModel.GeneralPageViewModel.Companion.arrayDateGraph
 import com.example.mood.viewModel.GeneralPageViewModel.Companion.arrayHealthGraph
 import com.example.mood.viewModel.GeneralPageViewModel.Companion.arrayMoodGraph
 import com.example.mood.viewModel.GeneralPageViewModel.Companion.arrayStressGraph
 import com.example.mood.viewModel.StatisticsViewModel.Companion.counterSts
-import com.github.aachartmodel.aainfographics.aachartcreator.*
-import com.github.aachartmodel.aainfographics.aaoptionsmodel.AALabels
-import com.github.aachartmodel.aainfographics.aaoptionsmodel.AAXAxis
 
 import java.util.*
 
@@ -115,12 +108,12 @@ class GeneralPage : Fragment() {
 
             //наблюдатель обновление графика
             viewModel.counter.observe(viewLifecycleOwner, Observer{
-                graph(scrollGraph, txtOnbord)
+                graph(graph, scrollGraph, txtOnbord)
             })
 
             //невидимая кнопка для удаления карточки - костыль
             deleteCard.setOnClickListener {
-                graph(scrollGraph, txtOnbord)
+                graph(graph, scrollGraph, txtOnbord)
             }
 
             //получение графика
@@ -159,6 +152,11 @@ class GeneralPage : Fragment() {
 
                 //обновляем график
                 viewModel.readDB()
+
+                chipGroupHealthy.clearCheck()
+                chipGroupUnhealthy.clearCheck()
+                chipGroupSymptoms.clearCheck()
+                chipGroupCare.clearCheck()
 
                 Toast.makeText(requireContext(), requireContext().getString(R.string.toastSave), Toast.LENGTH_SHORT).show()
                 scrollGeneral.post {
@@ -256,7 +254,7 @@ class GeneralPage : Fragment() {
         return currentDateAndTime
     }
 
-    fun graph(scrollGraph: HorizontalScrollView, txtOnbord: LinearLayout) {
+    fun graph(graph: LineView, scrollGraph: HorizontalScrollView, txtOnbord: LinearLayout) {
         if (!tinyDB.getString("DateDB").isEmpty()) {
 
             counterSts.value?.let {
@@ -266,32 +264,16 @@ class GeneralPage : Fragment() {
             bindingGeneralPage.txtOnbord.visibility = View.GONE
             scrollGraph.visibility = View.VISIBLE
 
-            val aaChartModel: AAChartModel = AAChartModel()
-                .chartType(AAChartType.Spline)
-                .backgroundColor("#FFFFFF")
-                .dataLabelsEnabled(true)
-                .legendEnabled(true)
-                .animationDuration(10)
-                .yAxisVisible(true)
-                .yAxisLabelsEnabled(false)
-                .yAxisTitle("")
-                .markerSymbol(AAChartSymbolType.Circle)
-                .colorsTheme(arrayOf("#29B6FC", "#EF5350", "#000000"))
-                .categories(arrayDateGraph.toTypedArray())
-                .series(
-                    arrayOf(
-                        AASeriesElement()
-                            .name(this.getString(R.string.mood))
-                            .data(arrayMoodGraph.toTypedArray()),
-                        AASeriesElement()
-                            .name(this.getString(R.string.health))
-                            .data(arrayHealthGraph.toTypedArray()) ,
-                        AASeriesElement()
-                            .name(this.getString(R.string.stress2))
-                            .data(arrayStressGraph.toTypedArray())
-                    )
-                )
-            bindingGeneralPage.aaChartView.aa_drawChartWithChartModel(aaChartModel)
+            var bloodPressureLists = ArrayList<ArrayList<Float>>()
+            bloodPressureLists = arrayListOf(arrayMoodGraph as ArrayList<Float>, arrayHealthGraph as ArrayList<Float>, arrayStressGraph as ArrayList<Float>)
+            graph.setDrawDotLine(false) //optional
+            graph.getResources().getColor(R.color.md_white_1000)
+            graph.setShowPopup(LineView.SHOW_POPUPS_All) //optional
+            graph.setBottomTextList(arrayDateGraph as ArrayList<String>?)
+            graph.setColorArray(intArrayOf(Color.RED, Color.BLUE))
+            graph.marginBottom
+            graph.paddingBottom
+            graph.setFloatDataList(bloodPressureLists)
 
             tinyDB.remove("DateDB")
 
@@ -299,9 +281,6 @@ class GeneralPage : Fragment() {
             scrollGraph.post {
                 scrollGraph.fullScroll(View.FOCUS_RIGHT)
             }
-        }else{
-            txtOnbord.visibility = View.VISIBLE
-            scrollGraph.visibility = View.GONE
         }
     }
 
